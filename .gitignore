@@ -1,0 +1,12 @@
+node_modules/
+vendor/
+.env
+*.log
+dist/
+.angular/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
