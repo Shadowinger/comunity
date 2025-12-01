@@ -1,7 +1,30 @@
-<div class="container">
-  <h1>Všechny žádosti o pomoc</h1>
-  <div *ngIf="loading">Načítání...</div>
-  <div class="requests-list" *ngIf="!loading">
-    <app-request-card *ngFor="let request of requests" [request]="request"></app-request-card>
+<div class="container py-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold">Všechny žádosti o pomoc</h1>
+  </div>
+
+  <!-- Filters -->
+  <div class="mt-4 flex gap-3">
+    <select class="input w-48" [(ngModel)]="filterCategory">
+      <option value="">Všechny kategorie</option>
+      <option value="moving">Přestěhování</option>
+      <option value="tutoring">Doučování</option>
+      <option value="repair">Opravy</option>
+      <option value="other">Ostatní</option>
+    </select>
+    <select class="input w-48" [(ngModel)]="filterStatus">
+      <option value="">Všechny stavy</option>
+      <option value="open">Otevřené</option>
+      <option value="in_progress">Probíhá</option>
+      <option value="closed">Uzavřené</option>
+    </select>
+  </div>
+
+  <div class="mt-2 text-gray-600" *ngIf="loading">Načítání...</div>
+  <div class="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3" *ngIf="!loading">
+    <app-request-card *ngFor="let request of filteredRequests" [request]="request" (react)="onReact($event)"></app-request-card>
+  </div>
+  <div class="mt-4 text-gray-500" *ngIf="!loading && filteredRequests.length === 0">
+    Žádné žádosti nenalezeny.
   </div>
 </div>

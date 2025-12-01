@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { HelpRequest } from '../../shared/models/help-request.model';
 
 @Component({
@@ -8,5 +8,12 @@ import { HelpRequest } from '../../shared/models/help-request.model';
 })
 export class RequestCardComponent {
 	@Input() request!: HelpRequest;
+	@Output() react = new EventEmitter<number>();
+
+	onReact(event: Event): void {
+		event.preventDefault();
+		event.stopPropagation();
+		this.react.emit(this.request.id);
+	}
 }
 

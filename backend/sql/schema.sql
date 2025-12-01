@@ -1,0 +1,35 @@
+
+CREATE TABLE IF NOT EXISTS users (
+	id SERIAL PRIMARY KEY,
+	name TEXT NOT NULL,
+	email TEXT UNIQUE NOT NULL,
+	password_hash TEXT NOT NULL,
+	role TEXT NOT NULL DEFAULT 'user'
+);
+
+CREATE TABLE IF NOT EXISTS help_requests (
+	id SERIAL PRIMARY KEY,
+	title TEXT NOT NULL,
+	description TEXT NOT NULL,
+	category TEXT NOT NULL,
+	status TEXT NOT NULL DEFAULT 'open',
+	user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS messages (
+	id SERIAL PRIMARY KEY,
+	sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+	recipient_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+	message TEXT NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- Reactions
+CREATE TABLE IF NOT EXISTS reactions (
+	id SERIAL PRIMARY KEY,
+	request_id INTEGER REFERENCES help_requests(id) ON DELETE CASCADE,
+	user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	UNIQUE(request_id, user_id)
+);

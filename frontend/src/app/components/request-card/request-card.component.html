@@ -1,9 +1,17 @@
-<a class="card request-card" [routerLink]="['/request', request.id]">
-	<h3>{{ request.title }}</h3>
-	<p class="description">{{ request.description }}</p>
-	<div class="meta">
-		<span>{{ request.category }}</span>
-		<span class="status">{{ request.status }}</span>
+<a class="card block hover:shadow-md transition-shadow" [routerLink]="['/request', request.id]">
+	<h3 class="text-lg font-semibold">{{ request.title }}</h3>
+	<p class="mt-2 text-sm text-gray-600">{{ request.description }}</p>
+	<div class="mt-3 flex justify-between items-center text-xs text-gray-500">
+		<span class="uppercase">{{ request.category }}</span>
+		<span class="font-semibold">{{ request.status }}</span>
+	</div>
+	<div class="mt-3 flex items-center gap-2">
+		<button 
+			class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-sm hover:bg-brand hover:text-white transition-colors"
+			(click)="onReact($event)">
+			<span>👍</span>
+			<span class="font-medium">{{ request.reaction_count || 0 }}</span>
+		</button>
 	</div>
 </a>
 

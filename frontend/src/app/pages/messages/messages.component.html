@@ -1,11 +1,84 @@
-<div class="container">
-  <h1>Zprávy</h1>
-  <div *ngIf="loading">Načítání...</div>
-  <div *ngIf="!loading" class="messages-list">
-    <div *ngFor="let message of messages" class="card message">
-      <p><strong>Od:</strong> {{ message.sender_name }}</p>
-      <p>{{ message.message }}</p>
-      <small>{{ message.created_at | date:'short' }}</small>
+<div class="flex h-[calc(100vh-56px)]">
+  <!-- Conversations sidebar -->
+  <div class="w-80 border-r border-gray-200 bg-white flex flex-col">
+    <div class="p-4 border-b border-gray-200">
+      <h2 class="text-xl font-bold">Zprávy</h2>
     </div>
+    <div class="flex-1 overflow-y-auto">
+      <div *ngIf="loading" class="p-4 text-gray-600">Načítání...</div>
+      <div *ngIf="!loading && conversations.length === 0" class="p-4 text-gray-500 text-sm">
+        Zatím žádné konverzace. Napište někomu zprávu z detailu žádosti!
+      </div>
+      <div
+        *ngFor="let conv of conversations"
+        class="p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
+        [class.bg-blue-50]="conv.other_user_id === selectedUserId"
+        (click)="selectConversation(conv.other_user_id)">
+        <div class="flex items-start gap-3">
+          <div class="h-12 w-12 rounded-full bg-brand text-white flex items-center justify-center font-bold">
+            {{ conv.other_user_name.charAt(0).toUpperCase() }}
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-sm">{{ conv.other_user_name }}</p>
+            <p class="text-xs text-gray-600 truncate">{{ conv.last_message }}</p>
+            <p class="text-xs text-gray-400 mt-1">{{ conv.last_message_time | date:'short' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat thread -->
+  <div class="flex-1 flex flex-col bg-gray-50" *ngIf="selectedUserId">
+    <!-- Header -->
+    <div class="bg-white p-4 border-b border-gray-200 flex items-center gap-3">
+      <div class="h-10 w-10 rounded-full bg-brand text-white flex items-center justify-center font-bold">
+        {{ selectedConversation?.other_user_name.charAt(0).toUpperCase() }}
+      </div>
+      <div>
+        <p class="font-semibold">{{ selectedConversation?.other_user_name }}</p>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="flex-1 overflow-y-auto p-4 messages-thread">
+      <div *ngFor="let msg of messages" class="mb-3">
+        <div
+          class="flex"
+          [class.justify-end]="msg.sender_id === currentUserId">
+          <div
+            class="max-w-xs px-4 py-2 rounded-2xl"
+            [class.bg-brand]="msg.sender_id === currentUserId"
+            [class.text-white]="msg.sender_id === currentUserId"
+            [class.bg-white]="msg.sender_id !== currentUserId">
+            <p class="text-sm">{{ msg.message }}</p>
+            <p class="text-xs mt-1 opacity-70">{{ msg.created_at | date:'short' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="bg-white p-4 border-t border-gray-200">
+      <div class="flex gap-2">
+        <input
+          type="text"
+          class="flex-1 rounded-full border border-gray-300 px-4 py-2"
+          placeholder="Napište zprávu..."
+          [(ngModel)]="newMessage"
+          (keyup.enter)="sendMessage()">
+        <button
+          class="btn btn-primary rounded-full px-6"
+          (click)="sendMessage()"
+          [disabled]="!newMessage.trim()">
+          Odeslat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="flex-1 flex items-center justify-center bg-gray-50" *ngIf="!selectedUserId && !loading">
+    <p class="text-gray-500">Vyberte konverzaci pro zobrazení zpráv</p>
   </div>
 </div>

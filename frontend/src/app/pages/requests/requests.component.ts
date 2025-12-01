@@ -10,6 +10,8 @@ import { HelpRequest } from '../../shared/models/help-request.model';
 export class RequestsComponent implements OnInit {
   requests: HelpRequest[] = [];
   loading = false;
+  filterCategory = '';
+  filterStatus = '';
 
   constructor(private apiService: ApiService) {}
 
@@ -28,6 +30,26 @@ export class RequestsComponent implements OnInit {
         console.error('Error:', error);
         this.loading = false;
       }
+    });
+  }
+
+  get filteredRequests(): HelpRequest[] {
+    return this.requests.filter(r => {
+      const matchCategory = !this.filterCategory || r.category === this.filterCategory;
+      const matchStatus = !this.filterStatus || r.status === this.filterStatus;
+      return matchCategory && matchStatus;
+    });
+  }
+
+  onReact(id: number): void {
+    this.apiService.reactToRequest(id).subscribe({
+      next: () => {
+        const req = this.requests.find(r => r.id === id);
+        if (req) {
+          req.reaction_count = (req.reaction_count || 0) + 1;
+        }
+      },
+      error: (err) => console.error('Reaction failed:', err)
     });
   }
 }

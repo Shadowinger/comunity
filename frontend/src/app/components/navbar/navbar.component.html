@@ -1,14 +1,21 @@
-<nav class="nav">
-	<div class="brand" routerLink="/home">Community</div>
-	<ul class="links">
-		<li><a routerLink="/requests" routerLinkActive="active">Žádosti</a></li>
-		<li><a routerLink="/messages" routerLinkActive="active">Zprávy</a></li>
-		<li><a routerLink="/create-request" routerLinkActive="active">Vytvořit</a></li>
-		<li><a routerLink="/admin" routerLinkActive="active">Admin</a></li>
-	</ul>
-	<div class="auth">
-		<button *ngIf="!auth.isLoggedIn()" class="btn btn-primary" routerLink="/login">Přihlásit</button>
-		<button *ngIf="auth.isLoggedIn()" class="btn" (click)="logout()">Odhlásit</button>
+<nav class="bg-white shadow-card">
+	<div class="container flex h-14 items-center justify-between">
+		<div class="flex items-center gap-2">
+			<div class="h-6 w-6 rounded-sm bg-brand"></div>
+			<a class="text-lg font-bold" routerLink="/home">Community</a>
+		</div>
+		<ul class="hidden md:flex items-center gap-5 text-sm text-gray-700">
+			<li><a class="hover:text-brand" routerLink="/requests" routerLinkActive="text-brand">Žádosti</a></li>
+			<li><a class="hover:text-brand" routerLink="/messages" routerLinkActive="text-brand">Zprávy</a></li>
+			<li><a class="hover:text-brand" routerLink="/create-request" routerLinkActive="text-brand">Vytvořit</a></li>
+			<li><a class="hover:text-brand" routerLink="/admin" routerLinkActive="text-brand">Admin</a></li>
+			
+		</ul>
+		<div>
+			<button *ngIf="!auth.isLoggedIn()" class="btn btn-primary" routerLink="/login">Přihlásit</button>
+			<button *ngIf="!auth.isLoggedIn()" class="btn border rounded-xs border-gray-300 ml-5" routerLink="/register">Regisrovat</button>
+			<button *ngIf="auth.isLoggedIn()" class="btn" (click)="logout()">Odhlásit</button>
+		</div>
 	</div>
 </nav>
 

@@ -25,6 +25,10 @@ export class ApiService {
 		return this.http.post<HelpRequest>(`${this.base}/requests`, payload);
 	}
 
+	reactToRequest(id: number): Observable<any> {
+		return this.http.post(`${this.base}/requests/${id}/react`, {});
+	}
+
 	// Users
 	getUsers(): Observable<User[]> {
 		return this.http.get<User[]>(`${this.base}/users`);
@@ -37,6 +41,18 @@ export class ApiService {
 	// Messages
 	getMessages(): Observable<Message[]> {
 		return this.http.get<Message[]>(`${this.base}/messages`);
+	}
+
+	getConversations(): Observable<any[]> {
+		return this.http.get<any[]>(`${this.base}/conversations`);
+	}
+
+	getConversation(userId: number): Observable<Message[]> {
+		return this.http.get<Message[]>(`${this.base}/conversations/${userId}`);
+	}
+
+	sendMessage(recipientId: number, message: string): Observable<any> {
+		return this.http.post(`${this.base}/messages`, { recipient_id: recipientId, message });
 	}
 }
 

@@ -1,12 +1,36 @@
-<div class="container">
-  <div *ngIf="loading">Načítání...</div>
+<div class="container py-6">
+  <div class="text-gray-600" *ngIf="loading">Načítání...</div>
   <div *ngIf="request && !loading" class="card">
-    <h1>{{ request.title }}</h1>
-    <p class="description">{{ request.description }}</p>
-    <div class="meta">
-      <span>Kategorie: {{ request.category }}</span>
-      <span>Status: {{ request.status }}</span>
-      <span>Autor: {{ request.user_name }}</span>
+    <div class="flex justify-between items-start">
+      <div class="flex-1">
+        <h1 class="text-2xl font-bold">{{ request.title }}</h1>
+        <p class="mt-2 text-gray-700">{{ request.description }}</p>
+        <div class="mt-4 flex gap-4 text-sm text-gray-600">
+          <span>Kategorie: {{ request.category }}</span>
+          <span>Status: {{ request.status }}</span>
+          <span>Autor: {{ request.user_name }}</span>
+        </div>
+      </div>
+      <button
+        *ngIf="request.user_id && request.user_id !== currentUserId"
+        class="btn btn-primary"
+        (click)="openMessageDialog()">
+        💬 Napsat zprávu
+      </button>
+    </div>
+
+    <!-- Message dialog -->
+    <div *ngIf="showMessageDialog" class="mt-4 p-4 bg-gray-50 rounded-md">
+      <h3 class="font-semibold mb-2">Napsat zprávu uživateli {{ request.user_name }}</h3>
+      <textarea
+        class="input w-full"
+        rows="3"
+        placeholder="Vaše zpráva..."
+        [(ngModel)]="messageText"></textarea>
+      <div class="mt-2 flex gap-2">
+        <button class="btn btn-primary" (click)="sendMessage()" [disabled]="!messageText.trim()">Odeslat</button>
+        <button class="btn border border-gray-300" (click)="showMessageDialog = false">Zrušit</button>
+      </div>
     </div>
   </div>
 </div>

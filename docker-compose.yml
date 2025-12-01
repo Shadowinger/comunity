@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16          
+    container_name: community_pg
+    environment:
+      POSTGRES_USER: stanislav    
+      POSTGRES_PASSWORD: heslo   
+      POSTGRES_DB: community
+    ports:
+      - "5432:5432"            
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: community_php
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

@@ -7,5 +7,6 @@ export interface HelpRequest {
 	user_id?: number;
 	user_name?: string;
 	created_at?: string;
+	reaction_count?: number;
 }
 

@@ -1,11 +1,11 @@
-<div class="container">
-  <div *ngIf="loading">Načítání...</div>
+<div class="container py-6">
+  <div class="text-gray-600" *ngIf="loading">Načítání...</div>
   <div *ngIf="user && !loading" class="card">
-    <h1>Profil uživatele</h1>
-    <div class="user-info">
-      <p><strong>Jméno:</strong> {{ user.name }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Role:</strong> {{ user.role }}</p>
+    <h1 class="text-2xl font-bold">Profil uživatele</h1>
+    <div class="mt-3 space-y-2 text-gray-800">
+      <p><span class="font-semibold">Jméno:</span> {{ user.name }}</p>
+      <p><span class="font-semibold">Email:</span> {{ user.email }}</p>
+      <p><span class="font-semibold">Role:</span> {{ user.role }}</p>
     </div>
   </div>
 </div>
