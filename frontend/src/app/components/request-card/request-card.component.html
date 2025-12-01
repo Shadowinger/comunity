@@ -1,0 +1,9 @@
+<a class="card request-card" [routerLink]="['/request', request.id]">
+	<h3>{{ request.title }}</h3>
+	<p class="description">{{ request.description }}</p>
+	<div class="meta">
+		<span>{{ request.category }}</span>
+		<span class="status">{{ request.status }}</span>
+	</div>
+</a>
+

@@ -1,0 +1,21 @@
+.container {
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.messages-list {
+  margin-top: 20px;
+}
+
+.message {
+  margin-bottom: 15px;
+  
+  p {
+    margin: 5px 0;
+  }
+
+  small {
+    color: #999;
+  }
+}

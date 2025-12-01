@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="card">
+    <h2>Vytvořit novou žádost</h2>
+    <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="title">Název</label>
+        <input type="text" id="title" formControlName="title">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Popis</label>
+        <textarea id="description" formControlName="description" rows="6"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Kategorie</label>
+        <select id="category" formControlName="category">
+          <option value="moving">Přestěhování</option>
+          <option value="tutoring">Doučování</option>
+          <option value="repair">Opravy</option>
+          <option value="other">Ostatní</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading || requestForm.invalid">
+        {{ loading ? 'Vytváření...' : 'Vytvořit žádost' }}
+      </button>
+    </form>
+  </div>
+</div>

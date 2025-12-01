@@ -1,0 +1,12 @@
+<div class="container">
+  <div *ngIf="loading">Načítání...</div>
+  <div *ngIf="request && !loading" class="card">
+    <h1>{{ request.title }}</h1>
+    <p class="description">{{ request.description }}</p>
+    <div class="meta">
+      <span>Kategorie: {{ request.category }}</span>
+      <span>Status: {{ request.status }}</span>
+      <span>Autor: {{ request.user_name }}</span>
+    </div>
+  </div>
+</div>

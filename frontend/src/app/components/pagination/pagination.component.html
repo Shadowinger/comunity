@@ -1,0 +1,6 @@
+<div class="pagination">
+	<button class="btn" (click)="prev()" [disabled]="currentPage === 1">Předchozí</button>
+	<span>Strana {{ currentPage }} / {{ totalPages }}</span>
+	<button class="btn" (click)="next()" [disabled]="currentPage === totalPages">Další</button>
+</div>
+

@@ -1,0 +1,11 @@
+<div class="container">
+  <div *ngIf="loading">Načítání...</div>
+  <div *ngIf="user && !loading" class="card">
+    <h1>Profil uživatele</h1>
+    <div class="user-info">
+      <p><strong>Jméno:</strong> {{ user.name }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Role:</strong> {{ user.role }}</p>
+    </div>
+  </div>
+</div>

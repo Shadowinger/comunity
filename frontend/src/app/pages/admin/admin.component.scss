@@ -1,0 +1,33 @@
+.container {
+  padding: 40px 20px;
+}
+
+.admin-section {
+  margin-bottom: 40px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+
+  h3 {
+    font-size: 36px;
+    color: #007bff;
+    margin: 0;
+  }
+
+  p {
+    margin: 10px 0 0;
+    color: #666;
+  }
+}

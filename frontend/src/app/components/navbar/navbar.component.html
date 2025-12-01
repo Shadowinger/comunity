@@ -1,0 +1,14 @@
+<nav class="nav">
+	<div class="brand" routerLink="/home">Community</div>
+	<ul class="links">
+		<li><a routerLink="/requests" routerLinkActive="active">Žádosti</a></li>
+		<li><a routerLink="/messages" routerLinkActive="active">Zprávy</a></li>
+		<li><a routerLink="/create-request" routerLinkActive="active">Vytvořit</a></li>
+		<li><a routerLink="/admin" routerLinkActive="active">Admin</a></li>
+	</ul>
+	<div class="auth">
+		<button *ngIf="!auth.isLoggedIn()" class="btn btn-primary" routerLink="/login">Přihlásit</button>
+		<button *ngIf="auth.isLoggedIn()" class="btn" (click)="logout()">Odhlásit</button>
+	</div>
+</nav>
+
