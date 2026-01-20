@@ -7,8 +7,7 @@
     "build": "npx ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-	"vercel-build": "npx ng build --configuration production"
-
+    "vercel-build": "npx ng build --configuration production"
   },
   "private": true,
   "dependencies": {
@@ -26,8 +25,8 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.2.10",
-    "@angular/cli": "^16.2.16",
-    "@angular/compiler-cli": "^15.2.10",
+    "@angular/cli": "^15.2.10",
+	"@angular/compiler-cli": "^15.2.10",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.4.14",
