@@ -57,13 +57,52 @@ async function startServer() {
   try {
     await db.query('SELECT 1');
     console.log('Database connected successfully');
-    
+
+    // Automatické vytvoření všech tabulek
+    const initDbQuery = `
+      CREATE TABLE IF NOT EXISTS users (
+          id SERIAL PRIMARY KEY,
+          name TEXT NOT NULL,
+          email TEXT UNIQUE NOT NULL,
+          password_hash TEXT NOT NULL,
+          role TEXT NOT NULL DEFAULT 'user'
+      );
+
+      CREATE TABLE IF NOT EXISTS help_requests (
+          id SERIAL PRIMARY KEY,
+          title TEXT NOT NULL,
+          description TEXT NOT NULL,
+          category TEXT NOT NULL,
+          status TEXT NOT NULL DEFAULT 'open',
+          user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+          created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS messages (
+          id SERIAL PRIMARY KEY,
+          sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          recipient_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          message TEXT NOT NULL,
+          created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS reactions (
+          id SERIAL PRIMARY KEY,
+          request_id INTEGER REFERENCES help_requests(id) ON DELETE CASCADE,
+          user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+          created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+          UNIQUE(request_id, user_id)
+      );
+    `;
+
+    await db.query(initDbQuery);
+    console.log('Všechny databázové tabulky byly inicializovány.');
+
     app.listen(PORT, HOST, () => {
       console.log(`Server running on http://${HOST}:${PORT}`);
-      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
     });
   } catch (error) {
-    console.error('Failed to connect to database:', error.message);
+    console.error('Chyba při startu serveru nebo inicializaci DB:', error.message);
     process.exit(1);
   }
 }
