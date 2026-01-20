@@ -12,6 +12,7 @@ export class RequestsComponent implements OnInit {
   loading = false;
   filterCategory = '';
   filterStatus = '';
+  showMobileSidebar = false;
 
   constructor(private apiService: ApiService) {}
 

@@ -1,20 +1,20 @@
-<div class="flex items-center justify-center gap-4 py-4">
+<div class="flex items-center justify-center gap-2 sm:gap-4 py-3 sm:py-4 px-2">
 	<button 
-		class="btn btn-secondary" 
+		class="btn btn-secondary text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2" 
 		(click)="prev()" 
 		[disabled]="currentPage === 1">
-		<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+		<svg class="w-4 h-4 sm:mr-1" fill="currentColor" viewBox="0 0 24 24">
 			<path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
 		</svg>
-		Předchozí
+		<span class="hidden sm:inline">Předchozí</span>
 	</button>
-	<span class="text-discord-text text-sm">Strana {{ currentPage }} / {{ totalPages }}</span>
+	<span class="text-discord-text text-xs sm:text-sm whitespace-nowrap">{{ currentPage }} / {{ totalPages }}</span>
 	<button 
-		class="btn btn-secondary" 
+		class="btn btn-secondary text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2" 
 		(click)="next()" 
 		[disabled]="currentPage === totalPages">
-		Další
-		<svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 24 24">
+		<span class="hidden sm:inline">Další</span>
+		<svg class="w-4 h-4 sm:ml-1" fill="currentColor" viewBox="0 0 24 24">
 			<path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
 		</svg>
 	</button>

@@ -15,6 +15,7 @@ export class AdminComponent implements OnInit {
   requests: HelpRequest[] = [];
   loading = false;
   activeTab: 'stats' | 'users' | 'requests' = 'stats';
+  showMobileSidebar = false;
 
   constructor(
     private apiService: ApiService,

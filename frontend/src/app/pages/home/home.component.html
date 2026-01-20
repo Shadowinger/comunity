@@ -1,27 +1,27 @@
 <div class="flex flex-col flex-1 h-full w-full overflow-hidden bg-discord-channel">
 	<!-- Hero Section -->
 	<section class="bg-discord-sidebar flex-shrink-0 w-full">
-		<div class="w-full py-16 px-4">
+		<div class="w-full py-8 sm:py-12 md:py-16 px-4">
 			<div class="mx-auto max-w-2xl text-center">
-				<div class="mb-6">
-					<div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-discord-blurple mb-4">
-						<svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+				<div class="mb-4 sm:mb-6">
+					<div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-discord-blurple mb-3 sm:mb-4">
+						<svg class="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
 							<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
 						</svg>
 					</div>
 				</div>
-				<h1 class="text-4xl font-bold text-white mb-4">Vítejte v Community</h1>
-				<p class="text-lg text-discord-muted mb-8">
+				<h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4 px-2">Vítejte v Community</h1>
+				<p class="text-sm sm:text-base md:text-lg text-discord-muted mb-6 sm:mb-8 px-4">
 					Místo, kde můžete najít pomoc nebo nabídnout svou. Připojte se k naší komunitě!
 				</p>
-				<div class="flex items-center justify-center gap-4">
-					<a class="btn btn-primary px-6 py-3 text-base" routerLink="/requests">
+				<div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4">
+					<a class="btn btn-primary w-full sm:w-auto px-6 py-3 text-sm sm:text-base" routerLink="/requests">
 						<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
 							<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
 						</svg>
 						Procházet žádosti
 					</a>
-					<a class="btn btn-secondary px-6 py-3 text-base" routerLink="/create-request">
+					<a class="btn btn-secondary w-full sm:w-auto px-6 py-3 text-sm sm:text-base" routerLink="/create-request">
 						<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
 							<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
 						</svg>
@@ -33,14 +33,14 @@
 	</section>
 
 	<!-- Recent Requests -->
-	<section class="flex-1 overflow-y-auto py-8 w-full">
-		<div class="w-full px-4">
-			<div class="flex items-center gap-2 mb-6">
-				<svg class="w-6 h-6 text-discord-muted" fill="currentColor" viewBox="0 0 24 24">
+	<section class="flex-1 overflow-y-auto py-4 sm:py-6 md:py-8 w-full">
+		<div class="w-full px-3 sm:px-4">
+			<div class="flex items-center gap-2 mb-4 sm:mb-6">
+				<svg class="w-5 h-5 sm:w-6 sm:h-6 text-discord-muted" fill="currentColor" viewBox="0 0 24 24">
 					<path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
 					<path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
 				</svg>
-				<h2 class="text-xl font-bold text-white">Nejnovější žádosti</h2>
+				<h2 class="text-lg sm:text-xl font-bold text-white">Nejnovější žádosti</h2>
 			</div>
 
 			<div class="text-discord-muted" *ngIf="loading">
@@ -50,12 +50,12 @@
 				</div>
 			</div>
 
-			<div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 w-full" *ngIf="!loading">
+			<div class="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full" *ngIf="!loading">
 				<app-request-card *ngFor="let request of recentRequests" [request]="request"></app-request-card>
 			</div>
 
-			<div class="mt-6 text-center" *ngIf="!loading && recentRequests.length > 0">
-				<a class="btn btn-secondary" routerLink="/requests">
+			<div class="mt-4 sm:mt-6 text-center" *ngIf="!loading && recentRequests.length > 0">
+				<a class="btn btn-secondary w-full sm:w-auto" routerLink="/requests">
 					Zobrazit všechny žádosti
 					<svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 24 24">
 						<path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
@@ -63,13 +63,13 @@
 				</a>
 			</div>
 
-			<div class="mt-6 text-center" *ngIf="!loading && recentRequests.length === 0">
+			<div class="mt-4 sm:mt-6 text-center px-4" *ngIf="!loading && recentRequests.length === 0">
 				<div class="card max-w-md mx-auto">
-					<svg class="w-16 h-16 mx-auto text-discord-muted mb-4" fill="currentColor" viewBox="0 0 24 24">
+					<svg class="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-discord-muted mb-3 sm:mb-4" fill="currentColor" viewBox="0 0 24 24">
 						<path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
 					</svg>
-					<p class="text-discord-text mb-4">Zatím žádné žádosti. Buďte první!</p>
-					<a class="btn btn-primary" routerLink="/create-request">Vytvořit žádost</a>
+					<p class="text-discord-text mb-4 text-sm sm:text-base">Zatím žádné žádosti. Buďte první!</p>
+					<a class="btn btn-primary w-full sm:w-auto" routerLink="/create-request">Vytvořit žádost</a>
 				</div>
 			</div>
 		</div>

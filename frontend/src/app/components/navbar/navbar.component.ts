@@ -8,11 +8,21 @@ import { AuthService } from '../../core/services/auth.service';
 	styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
+	mobileMenuOpen = false;
+
 	constructor(public auth: AuthService, private router: Router) {}
 
 	get currentUserName(): string {
 		const user = this.auth.getCurrentUser();
 		return user?.name || '';
+	}
+
+	toggleMobileMenu(): void {
+		this.mobileMenuOpen = !this.mobileMenuOpen;
+	}
+
+	closeMobileMenu(): void {
+		this.mobileMenuOpen = false;
 	}
 
 	logout(): void {

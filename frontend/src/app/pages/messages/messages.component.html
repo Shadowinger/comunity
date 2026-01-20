@@ -1,8 +1,21 @@
-<div class="flex flex-1 h-full w-full overflow-hidden">
+<div class="flex flex-1 h-full w-full overflow-hidden relative">
+  <!-- Mobile back button (shown when conversation selected on mobile) -->
+  <button 
+    class="md:hidden absolute top-2 left-2 z-30 p-2 rounded-lg bg-discord-sidebar/90 text-discord-text hover:bg-discord-hover transition-colors shadow-lg"
+    *ngIf="selectedUserId && !showMobileSidebar"
+    (click)="showMobileSidebar = true">
+    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+    </svg>
+  </button>
+
   <!-- Conversations sidebar -->
-  <div class="w-60 bg-discord-sidebar flex flex-col border-r border-discord-dark h-full flex-shrink-0">
+  <div class="bg-discord-sidebar flex flex-col border-r border-discord-dark h-full flex-shrink-0 absolute md:relative z-20 transition-transform duration-300 w-full md:w-60"
+       [class.translate-x-0]="showMobileSidebar || !selectedUserId"
+       [class.-translate-x-full]="!showMobileSidebar && selectedUserId"
+       [class.md:translate-x-0]="true">
     <!-- Header -->
-    <div class="h-12 px-4 flex items-center border-b border-discord-dark shadow-sm flex-shrink-0">
+    <div class="h-12 px-4 flex items-center justify-between border-b border-discord-dark shadow-sm flex-shrink-0">
       <div class="flex items-center gap-2 text-white font-semibold">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
@@ -30,12 +43,12 @@
 
       <div
         *ngFor="let conv of conversations"
-        class="mx-2 px-2 py-2 rounded flex items-center gap-3 cursor-pointer transition-colors"
+        class="mx-2 px-3 py-3 rounded flex items-center gap-3 cursor-pointer transition-colors"
         [class.bg-discord-selected]="conv.other_user_id === selectedUserId"
         [class.hover:bg-discord-hover]="conv.other_user_id !== selectedUserId"
-        (click)="selectConversation(conv.other_user_id)">
-        <div class="relative">
-          <div class="avatar w-8 h-8 text-sm">
+        (click)="selectConversation(conv.other_user_id); showMobileSidebar = false">
+        <div class="relative flex-shrink-0">
+          <div class="avatar w-10 h-10 text-sm">
             {{ conv.other_user_name.charAt(0).toUpperCase() }}
           </div>
           <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-discord-green rounded-full border-2 border-discord-sidebar"></div>
@@ -51,25 +64,25 @@
   <!-- Chat area -->
   <div class="flex-1 flex flex-col bg-discord-channel h-full min-w-0" *ngIf="selectedUserId">
     <!-- Chat header -->
-    <div class="h-12 px-4 flex items-center border-b border-discord-dark shadow-sm bg-discord-channel flex-shrink-0">
-      <div class="flex items-center gap-3">
+    <div class="h-12 px-3 sm:px-4 flex items-center border-b border-discord-dark shadow-sm bg-discord-channel flex-shrink-0">
+      <div class="flex items-center gap-2 sm:gap-3 ml-10 md:ml-0">
         <span class="text-discord-muted">@</span>
-        <span class="font-semibold text-white">{{ selectedConversation?.other_user_name }}</span>
+        <span class="font-semibold text-white text-sm sm:text-base truncate">{{ selectedConversation?.other_user_name }}</span>
       </div>
     </div>
 
     <!-- Messages -->
-    <div class="flex-1 overflow-y-auto px-4 py-4 messages-thread space-y-4 ">
+    <div class="flex-1 overflow-y-auto px-3 sm:px-4 py-4 messages-thread space-y-3 sm:space-y-4">
       <div *ngFor="let msg of messages; let i = index" class="group">
-        <div class="flex items-start gap-4 hover:bg-discord-hover/30 -mx-4 px-4 py-1 rounded">
+        <div class="flex items-start gap-2 sm:gap-4 hover:bg-discord-hover/30 -mx-3 sm:-mx-4 px-3 sm:px-4 py-1 rounded">
           <!-- Avatar (show only for first message or different sender) -->
-          <div class="w-10 flex-shrink-0" 
+          <div class="w-8 sm:w-10 flex-shrink-0" 
                *ngIf="i === 0 || messages[i-1].sender_id !== msg.sender_id">
-            <div class="avatar w-10 h-10">
+            <div class="avatar w-8 h-8 sm:w-10 sm:h-10 text-sm">
               {{ msg.sender_name?.charAt(0).toUpperCase() || '?' }}
             </div>
           </div>
-          <div class="w-10 flex-shrink-0" *ngIf="i > 0 && messages[i-1].sender_id === msg.sender_id">
+          <div class="w-8 sm:w-10 flex-shrink-0" *ngIf="i > 0 && messages[i-1].sender_id === msg.sender_id">
             <span class="text-xs text-discord-muted opacity-0 group-hover:opacity-100">
               {{ msg.created_at | date:'HH:mm' }}
             </span>
@@ -77,44 +90,34 @@
 
           <div class="flex-1 min-w-0">
             <!-- Username and timestamp (show only for first message or different sender) -->
-            <div *ngIf="i === 0 || messages[i-1].sender_id !== msg.sender_id" class="flex items-baseline gap-2 mb-1">
-              <span class="font-medium" 
+            <div *ngIf="i === 0 || messages[i-1].sender_id !== msg.sender_id" class="flex flex-wrap items-baseline gap-1 sm:gap-2 mb-1">
+              <span class="font-medium text-sm sm:text-base" 
                     [class.text-discord-blurple]="msg.sender_id === currentUserId"
                     [class.text-discord-green]="msg.sender_id !== currentUserId">
                 {{ msg.sender_name }}
               </span>
-              <span class="text-xs text-discord-muted">{{ msg.created_at | date:'dd.MM.yyyy HH:mm' }}</span>
+              <span class="text-xs text-discord-muted">{{ msg.created_at | date:'dd.MM. HH:mm' }}</span>
             </div>
-            <p class="text-discord-text break-words">{{ msg.message }}</p>
+            <p class="text-discord-text break-words text-sm sm:text-base">{{ msg.message }}</p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Message input -->
-    <div class="px-4 pb-6 flex-shrink-0">
+    <div class="px-3 sm:px-4 pb-4 sm:pb-6 flex-shrink-0">
       <div class="bg-discord-selected rounded-lg flex items-center">
-        <button class="p-3 text-discord-muted hover:text-discord-text transition-colors">
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-          </svg>
-        </button>
         <input
           type="text"
-          class="flex-1 bg-transparent border-none py-3 px-2 text-discord-text placeholder-discord-muted focus:outline-none"
+          class="flex-1 bg-transparent border-none py-2.5 sm:py-3 px-3 sm:px-4 text-sm sm:text-base text-discord-text placeholder-discord-muted focus:outline-none min-w-0"
           [placeholder]="'Napsat @' + (selectedConversation?.other_user_name || '')"
           [(ngModel)]="newMessage"
           (keyup.enter)="sendMessage()">
-        <button class="p-3 text-discord-muted hover:text-discord-text transition-colors">
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
-          </svg>
-        </button>
         <button 
-          class="p-3 text-discord-muted hover:text-discord-blurple transition-colors"
+          class="p-2.5 sm:p-3 text-discord-muted hover:text-discord-blurple transition-colors flex-shrink-0"
           (click)="sendMessage()"
           [disabled]="!newMessage.trim()">
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
           </svg>
         </button>
@@ -122,12 +125,12 @@
     </div>
   </div>
 
-  <!-- Empty state -->
-  <div class="flex-1 flex flex-col items-center justify-center bg-discord-channel h-full min-w-0" *ngIf="!selectedUserId && !loading">
-    <svg class="w-24 h-24 text-discord-muted mb-4" fill="currentColor" viewBox="0 0 24 24">
+  <!-- Empty state (only on desktop when no conversation) -->
+  <div class="hidden md:flex flex-1 flex-col items-center justify-center bg-discord-channel h-full min-w-0 p-4" *ngIf="!selectedUserId && !loading">
+    <svg class="w-16 h-16 sm:w-24 sm:h-24 text-discord-muted mb-4" fill="currentColor" viewBox="0 0 24 24">
       <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
     </svg>
-    <h3 class="text-xl font-bold text-discord-text mb-2">Vyberte konverzaci</h3>
-    <p class="text-discord-muted">Vyberte přátelé ze seznamu vlevo</p>
+    <h3 class="text-lg sm:text-xl font-bold text-discord-text mb-2 text-center">Vyberte konverzaci</h3>
+    <p class="text-discord-muted text-sm sm:text-base text-center">Vyberte konverzaci ze seznamu</p>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <a class="card block hover:bg-discord-hover transition-all duration-200 group" [routerLink]="['/request', request.id]">
-	<div class="flex items-start gap-3">
+	<div class="flex flex-col sm:flex-row sm:items-start gap-3">
 		<!-- Category Icon -->
-		<div class="w-10 h-10 rounded-lg bg-discord-channel flex items-center justify-center text-discord-muted group-hover:bg-discord-blurple group-hover:text-white transition-colors">
+		<div class="hidden sm:flex w-10 h-10 rounded-lg bg-discord-channel items-center justify-center text-discord-muted group-hover:bg-discord-blurple group-hover:text-white transition-colors flex-shrink-0">
 			<ng-container [ngSwitch]="request.category">
 				<svg *ngSwitchCase="'moving'" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
 					<path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
@@ -19,9 +19,10 @@
 		</div>
 
 		<div class="flex-1 min-w-0">
-			<div class="flex items-center gap-2 mb-1">
-				<h3 class="text-base font-semibold text-white truncate">{{ request.title }}</h3>
-				<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+			<!-- Header with title and status -->
+			<div class="flex flex-wrap items-center gap-2 mb-1">
+				<h3 class="text-sm sm:text-base font-semibold text-white truncate max-w-full">{{ request.title }}</h3>
+				<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium flex-shrink-0"
 					  [ngClass]="{
 						'bg-discord-green/20 text-discord-green': request.status === 'open',
 						'bg-discord-yellow/20 text-discord-yellow': request.status === 'in_progress',
@@ -30,25 +31,28 @@
 					{{ request.status === 'open' ? 'Otevřeno' : request.status === 'in_progress' ? 'Probíhá' : 'Uzavřeno' }}
 				</span>
 			</div>
-			<p class="text-sm text-discord-muted line-clamp-2 mb-2">{{ request.description }}</p>
 			
-			<div class="flex items-center gap-4 text-xs text-discord-muted">
+			<!-- Description -->
+			<p class="text-xs sm:text-sm text-discord-muted line-clamp-2 mb-2">{{ request.description }}</p>
+			
+			<!-- Meta info -->
+			<div class="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-discord-muted">
 				<span class="flex items-center gap-1">
-					<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+					<svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
 						<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
 					</svg>
-					{{ request.user_name || 'Anonym' }}
+					<span class="truncate max-w-[80px] sm:max-w-none">{{ request.user_name || 'Anonym' }}</span>
 				</span>
-				<span class="uppercase tracking-wide">{{ request.category }}</span>
+				<span class="uppercase tracking-wide hidden xs:inline">{{ request.category }}</span>
 			</div>
 		</div>
 
-		<!-- Reactions -->
-		<div class="flex flex-col items-center gap-1">
+		<!-- Reactions - hidden on very small screens, shown as row on mobile -->
+		<div class="flex sm:flex-col items-center gap-2 sm:gap-1 mt-2 sm:mt-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-discord-dark">
 			<button 
-				class="flex flex-col items-center p-2 rounded hover:bg-discord-dark transition-colors"
+				class="flex items-center sm:flex-col gap-2 sm:gap-1 p-2 rounded hover:bg-discord-dark transition-colors"
 				(click)="onReact($event)">
-				<svg class="w-5 h-5 text-discord-muted hover:text-discord-blurple" fill="currentColor" viewBox="0 0 24 24">
+				<svg class="w-4 h-4 sm:w-5 sm:h-5 text-discord-muted hover:text-discord-blurple" fill="currentColor" viewBox="0 0 24 24">
 					<path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
 				</svg>
 				<span class="text-xs font-medium text-discord-muted">{{ request.reaction_count || 0 }}</span>

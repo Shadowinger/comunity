@@ -22,6 +22,7 @@ export class MessagesComponent implements OnInit {
   newMessage = '';
   loading = false;
   currentUserId: number | null = null;
+  showMobileSidebar = true;
 
   constructor(
     private apiService: ApiService,
