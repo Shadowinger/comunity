@@ -1,14 +1,14 @@
 {
   "name": "community-frontend",
   "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "npx ng build --configuration production",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "vercel-build": "npx ng build --configuration production"
-  },
+ "scripts": {
+  "ng": "ng",
+  "start": "ng serve",
+  "build": "ng build frontend --configuration production",
+  "watch": "ng build frontend --watch --configuration development",
+  "test": "ng test"
+},
+
   "private": true,
   "dependencies": {
     "@angular/animations": "^15.2.10",
