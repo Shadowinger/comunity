@@ -17,3 +17,5 @@ export class RequestCardComponent {
 	}
 }
 
+// Add CommonModule import for ngSwitch/ngClass
+

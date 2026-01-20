@@ -10,6 +10,11 @@ import { AuthService } from '../../core/services/auth.service';
 export class NavbarComponent {
 	constructor(public auth: AuthService, private router: Router) {}
 
+	get currentUserName(): string {
+		const user = this.auth.getCurrentUser();
+		return user?.name || '';
+	}
+
 	logout(): void {
 		this.auth.logout();
 		this.router.navigate(['/login']);

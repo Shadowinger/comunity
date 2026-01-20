@@ -1,30 +1,92 @@
-<div class="container py-6">
-  <div class="flex items-center justify-between">
-    <h1 class="text-2xl font-bold">Všechny žádosti o pomoc</h1>
+<div class="flex flex-1 h-full w-full overflow-hidden">
+  <!-- Sidebar with filters -->
+  <div class="w-60 bg-discord-sidebar flex flex-col border-r border-discord-dark flex-shrink-0">
+    <!-- Header -->
+    <div class="h-12 px-4 flex items-center border-b border-discord-dark shadow-sm flex-shrink-0">
+      <div class="flex items-center gap-2 text-white font-semibold">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+        Žádosti
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="p-4 space-y-4 flex-shrink-0">
+      <div>
+        <label class="label">Kategorie</label>
+        <select class="input text-sm" [(ngModel)]="filterCategory">
+          <option value="">Všechny</option>
+          <option value="moving">🚚 Přestěhování</option>
+          <option value="tutoring">📚 Doučování</option>
+          <option value="repair">🔧 Opravy</option>
+          <option value="other">📋 Ostatní</option>
+        </select>
+      </div>
+      <div>
+        <label class="label">Status</label>
+        <select class="input text-sm" [(ngModel)]="filterStatus">
+          <option value="">Všechny</option>
+          <option value="open">🟢 Otevřené</option>
+          <option value="in_progress">🟡 Probíhá</option>
+          <option value="closed">⚫ Uzavřené</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="mt-auto p-4 border-t border-discord-dark flex-shrink-0">
+      <div class="text-xs text-discord-muted space-y-1">
+        <p>Celkem: {{ requests.length }} žádostí</p>
+        <p>Zobrazeno: {{ filteredRequests.length }}</p>
+      </div>
+    </div>
   </div>
 
-  <!-- Filters -->
-  <div class="mt-4 flex gap-3">
-    <select class="input w-48" [(ngModel)]="filterCategory">
-      <option value="">Všechny kategorie</option>
-      <option value="moving">Přestěhování</option>
-      <option value="tutoring">Doučování</option>
-      <option value="repair">Opravy</option>
-      <option value="other">Ostatní</option>
-    </select>
-    <select class="input w-48" [(ngModel)]="filterStatus">
-      <option value="">Všechny stavy</option>
-      <option value="open">Otevřené</option>
-      <option value="in_progress">Probíhá</option>
-      <option value="closed">Uzavřené</option>
-    </select>
-  </div>
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col bg-discord-channel min-w-0">
+    <!-- Header -->
+    <div class="h-12 px-4 flex items-center border-b border-discord-dark shadow-sm flex-shrink-0">
+      <div class="flex items-center gap-2">
+        <span class="text-discord-muted">#</span>
+        <span class="font-semibold text-white">všechny-žádosti</span>
+      </div>
+      <div class="ml-auto">
+        <a routerLink="/create-request" class="btn btn-primary text-sm">
+          <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          Nová žádost
+        </a>
+      </div>
+    </div>
 
-  <div class="mt-2 text-gray-600" *ngIf="loading">Načítání...</div>
-  <div class="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3" *ngIf="!loading">
-    <app-request-card *ngFor="let request of filteredRequests" [request]="request" (react)="onReact($event)"></app-request-card>
-  </div>
-  <div class="mt-4 text-gray-500" *ngIf="!loading && filteredRequests.length === 0">
-    Žádné žádosti nenalezeny.
+    <!-- Content -->
+    <div class="flex-1 overflow-y-auto p-4 w-full">
+      <!-- Loading -->
+      <div class="flex items-center gap-2 text-discord-muted" *ngIf="loading">
+        <div class="animate-spin w-4 h-4 border-2 border-discord-blurple border-t-transparent rounded-full"></div>
+        Načítání žádostí...
+      </div>
+
+      <!-- Requests grid -->
+      <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 w-full" *ngIf="!loading">
+        <app-request-card 
+          *ngFor="let request of filteredRequests" 
+          [request]="request" 
+          (react)="onReact($event)">
+        </app-request-card>
+      </div>
+
+      <!-- Empty state -->
+      <div class="flex flex-col items-center justify-center py-16" *ngIf="!loading && filteredRequests.length === 0">
+        <svg class="w-16 h-16 text-discord-muted mb-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+        </svg>
+        <h3 class="text-lg font-semibold text-discord-text mb-2">Žádné žádosti nenalezeny</h3>
+        <p class="text-discord-muted text-sm mb-4">Zkuste změnit filtry nebo vytvořte novou žádost</p>
+        <a routerLink="/create-request" class="btn btn-primary">Vytvořit žádost</a>
+      </div>
+    </div>
   </div>
 </div>

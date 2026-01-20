@@ -27,11 +27,7 @@ export class MessagesComponent implements OnInit {
     private apiService: ApiService,
     private authService: AuthService
   ) {
-    const token = this.authService.getToken();
-    if (token) {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      this.currentUserId = payload.sub;
-    }
+    this.currentUserId = this.authService.getCurrentUserId();
   }
 
   ngOnInit(): void {

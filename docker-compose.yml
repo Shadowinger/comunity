@@ -10,6 +10,27 @@ services:
       - "5432:5432"            
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./backend/sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./backend/sql/seed-admin.sql:/docker-entrypoint-initdb.d/02-seed.sql
+
+  backend:
+    build: ./backend
+    container_name: community_backend
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: stanislav
+      DB_PASSWORD: heslo
+      DB_NAME: community
+      PORT: 3000
+      JWT_SECRET: community-hub-secret-key-2024-secure
+      CORS_ORIGIN: http://localhost:4200
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - ./backend/src:/app/src
 
 volumes:
   pgdata:

@@ -1,15 +1,190 @@
-<div class="container py-6">
-  <h1 class="text-2xl font-bold">Administrace</h1>
-  <div class="mt-4">
-    <h2 class="text-lg font-semibold">Statistiky</h2>
-    <div class="mt-3 grid gap-4 sm:grid-cols-2">
-      <div class="card text-center">
-        <h3 class="text-4xl font-bold text-brand">{{ users.length }}</h3>
-        <p class="mt-1 text-gray-600">Uživatelů</p>
+<div class="flex flex-1 h-full w-full overflow-hidden">
+  <!-- Sidebar -->
+  <div class="w-60 bg-discord-sidebar flex flex-col border-r border-discord-dark flex-shrink-0">
+    <!-- Header -->
+    <div class="h-12 px-4 flex items-center border-b border-discord-dark shadow-sm flex-shrink-0">
+      <div class="flex items-center gap-2 text-white font-semibold">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+        </svg>
+        Administrace
       </div>
-      <div class="card text-center">
-        <h3 class="text-4xl font-bold text-brand">{{ requests.length }}</h3>
-        <p class="mt-1 text-gray-600">Žádostí</p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="p-2 space-y-1 flex-1">
+      <button 
+        class="w-full channel-item"
+        [class.active]="activeTab === 'stats'"
+        (click)="activeTab = 'stats'">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+        </svg>
+        Statistiky
+      </button>
+      <button 
+        class="w-full channel-item"
+        [class.active]="activeTab === 'users'"
+        (click)="activeTab = 'users'">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+        Uživatelé
+      </button>
+      <button 
+        class="w-full channel-item"
+        [class.active]="activeTab === 'requests'"
+        (click)="activeTab = 'requests'">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+        Žádosti
+      </button>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col bg-discord-channel min-w-0">
+    <!-- Header -->
+    <div class="h-12 px-4 flex items-center border-b border-discord-dark shadow-sm flex-shrink-0">
+      <span class="text-discord-muted">#</span>
+      <span class="font-semibold text-white ml-2">
+        {{ activeTab === 'stats' ? 'statistiky' : activeTab === 'users' ? 'uživatelé' : 'žádosti' }}
+      </span>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <!-- Stats Tab -->
+      <div *ngIf="activeTab === 'stats'">
+        <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 w-full">
+          <div class="card text-center">
+            <div class="w-12 h-12 rounded-full bg-discord-blurple/20 flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-discord-blurple" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z"/>
+              </svg>
+            </div>
+            <h3 class="text-3xl font-bold text-white">{{ users.length }}</h3>
+            <p class="text-discord-muted text-sm">Uživatelů</p>
+          </div>
+          <div class="card text-center">
+            <div class="w-12 h-12 rounded-full bg-discord-yellow/20 flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-discord-yellow" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2z"/>
+              </svg>
+            </div>
+            <h3 class="text-3xl font-bold text-white">{{ requests.length }}</h3>
+            <p class="text-discord-muted text-sm">Celkem žádostí</p>
+          </div>
+          <div class="card text-center">
+            <div class="w-12 h-12 rounded-full bg-discord-green/20 flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-discord-green" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <h3 class="text-3xl font-bold text-discord-green">{{ openRequestsCount }}</h3>
+            <p class="text-discord-muted text-sm">Otevřených</p>
+          </div>
+          <div class="card text-center">
+            <div class="w-12 h-12 rounded-full bg-discord-muted/20 flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-discord-muted" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              </svg>
+            </div>
+            <h3 class="text-3xl font-bold text-discord-muted">{{ closedRequestsCount }}</h3>
+            <p class="text-discord-muted text-sm">Uzavřených</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Tab -->
+      <div *ngIf="activeTab === 'users'">
+        <div class="card overflow-hidden">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-discord-dark">
+              <tr>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">ID</th>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">Uživatel</th>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">Email</th>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">Role</th>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">Akce</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users" class="border-t border-discord-dark hover:bg-discord-hover/30">
+                <td class="px-4 py-3 text-discord-muted">{{ user.id }}</td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="avatar w-8 h-8 text-sm">{{ user.name.charAt(0).toUpperCase() }}</div>
+                    <span class="text-white font-medium">{{ user.name }}</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-discord-text">{{ user.email }}</td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                        [class.bg-discord-blurple]="user.role === 'admin'"
+                        [class.text-white]="user.role === 'admin'"
+                        [class.bg-discord-dark]="user.role !== 'admin'"
+                        [class.text-discord-muted]="user.role !== 'admin'">
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <button class="btn btn-danger text-xs px-2 py-1" (click)="deleteUser(user.id)">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Requests Tab -->
+      <div *ngIf="activeTab === 'requests'">
+        <div class="card overflow-hidden">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-discord-dark">
+              <tr>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">ID</th>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">Název</th>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">Kategorie</th>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">Status</th>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">Autor</th>
+                <th class="px-4 py-3 text-discord-muted font-semibold uppercase text-xs">Akce</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let req of requests" class="border-t border-discord-dark hover:bg-discord-hover/30">
+                <td class="px-4 py-3 text-discord-muted">{{ req.id }}</td>
+                <td class="px-4 py-3">
+                  <a [routerLink]="['/request', req.id]" class="text-discord-link hover:underline">{{ req.title }}</a>
+                </td>
+                <td class="px-4 py-3 text-discord-text uppercase text-xs">{{ req.category }}</td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                        [ngClass]="{
+                          'bg-discord-green/20 text-discord-green': req.status === 'open',
+                          'bg-discord-yellow/20 text-discord-yellow': req.status === 'in_progress',
+                          'bg-discord-muted/20 text-discord-muted': req.status === 'closed'
+                        }">
+                    {{ req.status }}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-discord-text">{{ req.user_name }}</td>
+                <td class="px-4 py-3">
+                  <button class="btn btn-danger text-xs px-2 py-1" (click)="deleteRequest(req.id)">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

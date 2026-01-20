@@ -25,17 +25,32 @@ export class ApiService {
 		return this.http.post<HelpRequest>(`${this.base}/requests`, payload);
 	}
 
+	updateRequest(id: number, payload: Partial<HelpRequest>): Observable<HelpRequest> {
+		return this.http.put<HelpRequest>(`${this.base}/requests/${id}`, payload);
+	}
+
+	deleteRequest(id: number): Observable<any> {
+		return this.http.delete(`${this.base}/requests/${id}`);
+	}
+
 	reactToRequest(id: number): Observable<any> {
 		return this.http.post(`${this.base}/requests/${id}/react`, {});
 	}
 
-	// Users
 	getUsers(): Observable<User[]> {
 		return this.http.get<User[]>(`${this.base}/users`);
 	}
 
 	getUser(id: number): Observable<User> {
 		return this.http.get<User>(`${this.base}/users/${id}`);
+	}
+
+	updateUser(id: number, payload: Partial<User>): Observable<User> {
+		return this.http.put<User>(`${this.base}/users/${id}`, payload);
+	}
+
+	deleteUser(id: number): Observable<any> {
+		return this.http.delete(`${this.base}/users/${id}`);
 	}
 
 	// Messages

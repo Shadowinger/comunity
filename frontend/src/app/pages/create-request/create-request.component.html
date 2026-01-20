@@ -1,31 +1,97 @@
-<div class="container py-6">
-  <div class="mx-auto max-w-2xl">
+<div class="centered-page">
+  <div class="centered-page-content wide">
     <div class="card">
-      <h2 class="text-xl font-bold">Vytvořit novou žádost</h2>
-      <form class="mt-4 space-y-3" [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+      <!-- Header -->
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 rounded-lg bg-discord-blurple flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+        </div>
         <div>
-          <label class="label" for="title">Název</label>
-          <input class="input" type="text" id="title" formControlName="title">
+          <h2 class="text-xl font-bold text-white">Vytvořit novou žádost</h2>
+          <p class="text-sm text-discord-muted">Popište, s čím potřebujete pomoci</p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form class="space-y-5" [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+        <div>
+          <label class="label" for="title">Název žádosti</label>
+          <input 
+            class="input" 
+            type="text" 
+            id="title" 
+            formControlName="title"
+            placeholder="např. Potřebuji pomoct se stěhováním">
         </div>
 
         <div>
-          <label class="label" for="description">Popis</label>
-          <textarea class="input" id="description" formControlName="description" rows="6"></textarea>
+          <label class="label" for="description">Podrobný popis</label>
+          <textarea 
+            class="input" 
+            id="description" 
+            formControlName="description" 
+            rows="6"
+            placeholder="Popište podrobně, s čím potřebujete pomoct, kdy, kde apod."></textarea>
         </div>
 
         <div>
           <label class="label" for="category">Kategorie</label>
-          <select class="input" id="category" formControlName="category">
-            <option value="moving">Přestěhování</option>
-            <option value="tutoring">Doučování</option>
-            <option value="repair">Opravy</option>
-            <option value="other">Ostatní</option>
-          </select>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="relative cursor-pointer">
+              <input type="radio" formControlName="category" value="moving" class="peer sr-only">
+              <div class="flex items-center gap-3 p-3 rounded-lg bg-discord-dark border-2 border-transparent peer-checked:border-discord-blurple transition-colors">
+                <svg class="w-6 h-6 text-discord-muted peer-checked:text-discord-blurple" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4z"/>
+                </svg>
+                <span class="text-discord-text">Přestěhování</span>
+              </div>
+            </label>
+            <label class="relative cursor-pointer">
+              <input type="radio" formControlName="category" value="tutoring" class="peer sr-only">
+              <div class="flex items-center gap-3 p-3 rounded-lg bg-discord-dark border-2 border-transparent peer-checked:border-discord-blurple transition-colors">
+                <svg class="w-6 h-6 text-discord-muted" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                </svg>
+                <span class="text-discord-text">Doučování</span>
+              </div>
+            </label>
+            <label class="relative cursor-pointer">
+              <input type="radio" formControlName="category" value="repair" class="peer sr-only">
+              <div class="flex items-center gap-3 p-3 rounded-lg bg-discord-dark border-2 border-transparent peer-checked:border-discord-blurple transition-colors">
+                <svg class="w-6 h-6 text-discord-muted" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>
+                </svg>
+                <span class="text-discord-text">Opravy</span>
+              </div>
+            </label>
+            <label class="relative cursor-pointer">
+              <input type="radio" formControlName="category" value="other" class="peer sr-only">
+              <div class="flex items-center gap-3 p-3 rounded-lg bg-discord-dark border-2 border-transparent peer-checked:border-discord-blurple transition-colors">
+                <svg class="w-6 h-6 text-discord-muted" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+                <span class="text-discord-text">Ostatní</span>
+              </div>
+            </label>
+          </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" [disabled]="loading || requestForm.invalid">
-          {{ loading ? 'Vytváření...' : 'Vytvořit žádost' }}
-        </button>
+        <div class="pt-4">
+          <button type="submit" class="btn btn-primary w-full py-3" [disabled]="loading || requestForm.invalid">
+            <span *ngIf="!loading" class="flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+              </svg>
+              Vytvořit žádost
+            </span>
+            <span *ngIf="loading" class="flex items-center justify-center gap-2">
+              <div class="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+              Vytvářím...
+            </span>
+          </button>
+        </div>
       </form>
     </div>
   </div>

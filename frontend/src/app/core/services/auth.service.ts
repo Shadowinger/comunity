@@ -2,19 +2,24 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { User } from '../../shared/models/user.model';
 
-interface LoginResponse { token: string; }
+interface LoginResponse { token: string; user: User; }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 	private base = environment.apiUrl;
 	private tokenKey = 'auth_token';
+	private userKey = 'current_user';
 
 	constructor(private http: HttpClient) {}
 
 	login(email: string, password: string): Observable<LoginResponse> {
 		return this.http.post<LoginResponse>(`${this.base}/auth/login`, { email, password }).pipe(
-			tap(res => localStorage.setItem(this.tokenKey, res.token))
+			tap(res => {
+				localStorage.setItem(this.tokenKey, res.token);
+				localStorage.setItem(this.userKey, JSON.stringify(res.user));
+			})
 		);
 	}
 
@@ -24,6 +29,7 @@ export class AuthService {
 
 	logout(): void {
 		localStorage.removeItem(this.tokenKey);
+		localStorage.removeItem(this.userKey);
 	}
 
 	getToken(): string | null {
@@ -32,6 +38,25 @@ export class AuthService {
 
 	isLoggedIn(): boolean {
 		return !!this.getToken();
+	}
+
+	getCurrentUser(): User | null {
+		const userStr = localStorage.getItem(this.userKey);
+		if (userStr) {
+			return JSON.parse(userStr);
+		}
+		return null;
+	}
+
+	getCurrentUserId(): number | null {
+		const token = this.getToken();
+		if (!token) return null;
+		try {
+			const payload = JSON.parse(atob(token.split('.')[1]));
+			return payload.id || null;
+		} catch {
+			return null;
+		}
 	}
 
 	getUserRole(): string | null {
