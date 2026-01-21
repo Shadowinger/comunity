@@ -54,20 +54,13 @@ app.use((err, req, res, next) => {
 });
 
 async function startServer() {
-  try {
-    await db.query('SELECT 1');
-    console.log('Database connected successfully');
+  try {
+    await db.query('SELECT 1');
+    console.log('Database connected successfully');
 
-    // SQL, který nejdřív vše smaže (DROP) a pak vytvoří (CREATE)
-    const dropTables = `
-      DROP TABLE IF EXISTS reactions CASCADE;
-      DROP TABLE IF EXISTS messages CASCADE;
-      DROP TABLE IF EXISTS help_requests CASCADE;
-      DROP TABLE IF EXISTS users CASCADE;
-    `;
-
-    const createTables = `
-      CREATE TABLE users (
+    // Všechny příkazy v jednom bloku s "IF NOT EXISTS"
+    const initDbQuery = `
+      CREATE TABLE IF NOT EXISTS users (
           id SERIAL PRIMARY KEY,
           name TEXT NOT NULL,
           email TEXT UNIQUE NOT NULL,
@@ -75,7 +68,7 @@ async function startServer() {
           role TEXT NOT NULL DEFAULT 'user'
       );
 
-      CREATE TABLE help_requests (
+      CREATE TABLE IF NOT EXISTS help_requests (
           id SERIAL PRIMARY KEY,
           title TEXT NOT NULL,
           description TEXT NOT NULL,
@@ -85,7 +78,7 @@ async function startServer() {
           created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
 
-      CREATE TABLE messages (
+      CREATE TABLE IF NOT EXISTS messages (
           id SERIAL PRIMARY KEY,
           sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
           recipient_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -93,31 +86,32 @@ async function startServer() {
           created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
 
-      CREATE TABLE reactions (
+      CREATE TABLE IF NOT EXISTS reactions (
           id SERIAL PRIMARY KEY,
           request_id INTEGER REFERENCES help_requests(id) ON DELETE CASCADE,
           user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
           created_at TIMESTAMP NOT NULL DEFAULT NOW(),
           UNIQUE(request_id, user_id)
       );
-    `;
 
-    const insertAdmin = `
+      -- Vloží admina jen pokud v databázi ještě není
       INSERT INTO users (name, email, password_hash, role)
-      VALUES ('admin', 'admin@gmail.com', '$2a$10$fQPXjcW1r7cVie.rX03r5OsbWyMv/IrIiT3S4Qth5mmFUhX.ApM6y', 'admin');
+      VALUES ('admin', 'admin@gmail.com', '$2a$10$fQPXjcW1r7cVie.rX03r5OsbWyMv/IrIiT3S4Qth5mmFUhX.ApM6y', 'admin')
+      ON CONFLICT (email) DO NOTHING;
     `;
 
-    await db.query(dropTables);
-    await db.query(createTables);
-    await db.query(insertAdmin);
+    // Spustíme všechno najednou jedním dotazem
+    await db.query(initDbQuery);
+    console.log('Database schema checked/initialized');
 
-    app.listen(PORT, HOST, () => {
-      console.log(`Server running on http://${HOST}:${PORT}`);
-    });
-  } catch (error) {
-    console.error('CHYBA PŘI RESETU DB:', error.message);
-    process.exit(1);
-  }
+    app.listen(PORT, HOST, () => {
+      console.log(`Server running on http://${HOST}:${PORT}`);
+      console.log(`Ready for requests at https://comunity-r77x.onrender.com`);
+    });
+  } catch (error) {
+    console.error('DATABASE INIT ERROR:', error.message);
+    // Neukončujeme proces hned, aby Render mohl zkusit restart
+  }
 }
 
 startServer();
