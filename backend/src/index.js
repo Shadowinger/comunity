@@ -54,20 +54,27 @@ app.use((err, req, res, next) => {
 });
 
 async function startServer() {
+  // Nejdřív spustíme server, aby health check fungoval
+  app.listen(PORT, HOST, () => {
+    console.log(`Server running on http://${HOST}:${PORT}`);
+  });
+
   try {
     await db.query('SELECT 1');
     console.log('Database connected successfully');
 
-    // Všechny příkazy v jednom bloku s "IF NOT EXISTS"
-    const initDbQuery = `
+    // Vytvoření tabulek
+    await db.query(`
       CREATE TABLE IF NOT EXISTS users (
           id SERIAL PRIMARY KEY,
           name TEXT NOT NULL,
           email TEXT UNIQUE NOT NULL,
           password_hash TEXT NOT NULL,
           role TEXT NOT NULL DEFAULT 'user'
-      );
+      )
+    `);
 
+    await db.query(`
       CREATE TABLE IF NOT EXISTS help_requests (
           id SERIAL PRIMARY KEY,
           title TEXT NOT NULL,
@@ -76,41 +83,39 @@ async function startServer() {
           status TEXT NOT NULL DEFAULT 'open',
           user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
           created_at TIMESTAMP NOT NULL DEFAULT NOW()
-      );
+      )
+    `);
 
+    await db.query(`
       CREATE TABLE IF NOT EXISTS messages (
           id SERIAL PRIMARY KEY,
           sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
           recipient_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
           message TEXT NOT NULL,
           created_at TIMESTAMP NOT NULL DEFAULT NOW()
-      );
+      )
+    `);
 
+    await db.query(`
       CREATE TABLE IF NOT EXISTS reactions (
           id SERIAL PRIMARY KEY,
           request_id INTEGER REFERENCES help_requests(id) ON DELETE CASCADE,
           user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
           created_at TIMESTAMP NOT NULL DEFAULT NOW(),
           UNIQUE(request_id, user_id)
-      );
+      )
+    `);
 
-      -- Vloží admina jen pokud v databázi ještě není
+    // Vloží admina jen pokud v databázi ještě není
+    await db.query(`
       INSERT INTO users (name, email, password_hash, role)
       VALUES ('admin', 'admin@gmail.com', '$2a$10$fQPXjcW1r7cVie.rX03r5OsbWyMv/IrIiT3S4Qth5mmFUhX.ApM6y', 'admin')
-      ON CONFLICT (email) DO NOTHING;
-    `;
+      ON CONFLICT (email) DO NOTHING
+    `);
 
-    // Spustíme všechno najednou jedním dotazem
-    await db.query(initDbQuery);
-    console.log('Database schema checked/initialized');
-
-    app.listen(PORT, HOST, () => {
-      console.log(`Server running on http://${HOST}:${PORT}`);
-      console.log(`Ready for requests at https://comunity-r77x.onrender.com`);
-    });
+    console.log('Database schema initialized');
   } catch (error) {
     console.error('DATABASE INIT ERROR:', error.message);
-    // Neukončujeme proces hned, aby Render mohl zkusit restart
   }
 }
 
