@@ -66,6 +66,22 @@ export class RequestDetailComponent implements OnInit {
     });
   }
 
+  changeStatus(status: string): void {
+    if (!this.request) return;
+    this.apiService.updateRequest(this.request.id, { status }).subscribe({
+      next: (updated) => {
+        if (this.request) {
+          this.request.status = updated.status;
+        }
+      },
+      error: (err) => console.error('Error:', err)
+    });
+  }
+
+  isOwner(): boolean {
+    return this.request?.user_id === this.currentUserId;
+  }
+
   goBack(): void {
     this.location.back();
   }

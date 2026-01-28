@@ -42,7 +42,9 @@
             <div class="flex-1 min-w-0">
               <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
                 <h1 class="text-lg sm:text-2xl font-bold text-white">{{ request.title }}</h1>
-                <span class="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded text-xs font-medium"
+                
+                <!-- Status badge (non-owner) -->
+                <span *ngIf="!isOwner()" class="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded text-xs font-medium"
                       [ngClass]="{
                         'bg-discord-green/20 text-discord-green': request.status === 'open',
                         'bg-discord-yellow/20 text-discord-yellow': request.status === 'in_progress',
@@ -50,6 +52,21 @@
                       }">
                   {{ request.status === 'open' ? 'Otevřeno' : request.status === 'in_progress' ? 'Probíhá' : 'Uzavřeno' }}
                 </span>
+                
+                <!-- Status dropdown (owner can change) -->
+                <select *ngIf="isOwner()" 
+                        class="px-2 sm:px-2.5 py-0.5 rounded text-xs font-medium border-0 cursor-pointer"
+                        [ngClass]="{
+                          'bg-discord-green/20 text-discord-green': request.status === 'open',
+                          'bg-discord-yellow/20 text-discord-yellow': request.status === 'in_progress',
+                          'bg-discord-muted/20 text-discord-muted': request.status === 'closed'
+                        }"
+                        [value]="request.status"
+                        (change)="changeStatus($any($event.target).value)">
+                  <option value="open" [selected]="request.status === 'open'">🟢 Otevřeno</option>
+                  <option value="in_progress" [selected]="request.status === 'in_progress'">🟡 Probíhá</option>
+                  <option value="closed" [selected]="request.status === 'closed'">⚫ Uzavřeno</option>
+                </select>
               </div>
 
               <!-- Meta info -->
