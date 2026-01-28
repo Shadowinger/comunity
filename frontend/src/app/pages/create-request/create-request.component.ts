@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 
@@ -15,13 +16,18 @@ export class CreateRequestComponent {
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.requestForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
       category: ['other', Validators.required]
     });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   onSubmit(): void {

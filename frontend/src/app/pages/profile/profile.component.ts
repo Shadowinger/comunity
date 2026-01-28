@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { User } from '../../shared/models/user.model';
 
@@ -14,12 +15,17 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
     this.loadUser(id);
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   loadUser(id: number): void {

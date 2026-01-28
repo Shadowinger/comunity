@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { HelpRequest } from '../../shared/models/help-request.model';
@@ -19,6 +20,7 @@ export class RequestDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private apiService: ApiService,
     private authService: AuthService
   ) {
@@ -62,5 +64,9 @@ export class RequestDetailComponent implements OnInit {
       },
       error: (err) => console.error('Error:', err)
     });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

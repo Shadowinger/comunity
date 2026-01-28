@@ -23,6 +23,11 @@
 
 	<!-- Desktop Navigation links -->
 	<div class="hidden md:flex items-center gap-1 ml-auto">
+		<a routerLink="/home" routerLinkActive="bg-discord-selected text-white" [routerLinkActiveOptions]="{exact: true}"
+		   class="px-3 py-1.5 rounded text-sm text-discord-text hover:bg-discord-hover hover:text-white transition-colors">
+			Domů
+		</a>
+
 		<a routerLink="/requests" routerLinkActive="bg-discord-selected text-white" 
 		   class="px-3 py-1.5 rounded text-sm text-discord-text hover:bg-discord-hover hover:text-white transition-colors">
 			Žádosti
@@ -68,6 +73,15 @@
 	<!-- Mobile Navigation Menu -->
 	<div *ngIf="mobileMenuOpen" class="md:hidden absolute top-14 left-0 right-0 bg-discord-sidebar border-b border-discord-dark shadow-lg z-50">
 		<div class="flex flex-col p-3 space-y-1">
+			<a routerLink="/home" routerLinkActive="bg-discord-selected text-white" [routerLinkActiveOptions]="{exact: true}"
+			   class="flex items-center gap-3 px-4 py-3 rounded text-discord-text hover:bg-discord-hover hover:text-white transition-colors"
+			   (click)="closeMobileMenu()">
+				<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+					<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+				</svg>
+				Domů
+			</a>
+
 			<a routerLink="/requests" routerLinkActive="bg-discord-selected text-white" 
 			   class="flex items-center gap-3 px-4 py-3 rounded text-discord-text hover:bg-discord-hover hover:text-white transition-colors"
 			   (click)="closeMobileMenu()">
