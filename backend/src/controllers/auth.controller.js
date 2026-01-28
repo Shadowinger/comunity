@@ -10,14 +10,26 @@ const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    console.log('Registration attempt:', { name, email });
+
+    // Validate input
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email and password are required' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
     // Check if user exists
     const existingUser = await db.query('SELECT id FROM users WHERE email = $1', [email]);
     if (existingUser.rows.length > 0) {
+      console.log('Email already registered:', email);
       return res.status(400).json({ error: 'Email already registered' });
     }
 
     // Hash password
-    const salt = await bcrypt.genSalt(15);
+    const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
     // Create user
@@ -27,6 +39,7 @@ const register = async (req, res) => {
     );
 
     const user = sanitizeUser(result.rows[0]);
+    console.log('User registered successfully:', email);
     res.status(201).json({ message: 'User registered successfully', user });
   } catch (error) {
     console.error('Register error:', error);
@@ -38,16 +51,26 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log('Login attempt for email:', email);
+
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
     // Find user
     const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     if (result.rows.length === 0) {
+      console.log('User not found:', email);
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     const user = result.rows[0];
+    console.log('User found:', user.email, 'Role:', user.role);
 
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
+    console.log('Password valid:', isValidPassword);
     if (!isValidPassword) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }

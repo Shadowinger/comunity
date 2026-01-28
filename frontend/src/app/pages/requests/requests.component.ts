@@ -53,4 +53,13 @@ export class RequestsComponent implements OnInit {
       error: (err) => console.error('Reaction failed:', err)
     });
   }
+
+  onDelete(id: number): void {
+    this.apiService.deleteRequest(id).subscribe({
+      next: () => {
+        this.requests = this.requests.filter(r => r.id !== id);
+      },
+      error: (err) => console.error('Delete failed:', err)
+    });
+  }
 }

@@ -29,5 +29,14 @@ export class HomeComponent implements OnInit {
 			}
 		});
 	}
+
+	onDelete(id: number): void {
+		this.apiService.deleteRequest(id).subscribe({
+			next: () => {
+				this.recentRequests = this.recentRequests.filter(r => r.id !== id);
+			},
+			error: (err) => console.error('Delete failed:', err)
+		});
+	}
 }
 

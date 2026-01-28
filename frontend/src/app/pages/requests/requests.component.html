@@ -95,7 +95,8 @@
         <app-request-card 
           *ngFor="let request of filteredRequests" 
           [request]="request" 
-          (react)="onReact($event)">
+          (react)="onReact($event)"
+          (delete)="onDelete($event)">
         </app-request-card>
       </div>
 
